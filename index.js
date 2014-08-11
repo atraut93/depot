@@ -10,13 +10,16 @@ http.createServer(function(req, res) {
     var form = new multiparty.Form();
 
     form.parse(req, function(err, fields, files) {
-
       res.setHeader('content-type', 'text/json');
       uploadedFile = files.upload[0];
       filePath = path.resolve(uploadedFile.path);
-      parseApk(filePath, fields.name[0], function(data) {
-        res.end(data);
-      });
+      if (path.extname(filePath) !== '.apk') {
+        res.end("{\"error\": \"the file must be an apk\"}");
+      } else {
+        parseApk(filePath, fields.name[0], function(data) {
+          res.end(data);
+        });
+      }
     });
 
     return;
@@ -27,7 +30,7 @@ http.createServer(function(req, res) {
   res.end(
     '<form action="/upload" enctype="multipart/form-data" method="post">'+
     '<input type="text" name="name" placeholder="App Name"><br>'+
-    '<input type="file" name="upload"><br>'+
+    '<input type="file" name="upload" accept="application/vnd.android.package-archive"><br>'+
     '<input type="submit" value="Upload">'+
     '</form>'
   );
@@ -45,7 +48,7 @@ var parseApk = function parseApk(fileName, appName, callback) {
       resultData.name = appName;
       manifest = data.manifest[0];
       if (manifest['@android:versionCode']) {
-        resultData.versionCode = manifest['@android:versionCode'];
+        resultData.versionCode = '' + manifest['@android:versionCode'];
       }
       if (manifest['@android:versionName']) {
         resultData.versionNumber = manifest['@android:versionName'];
@@ -55,8 +58,8 @@ var parseApk = function parseApk(fileName, appName, callback) {
       }
       if (manifest['uses-sdk']) {
         usesSdk = manifest['uses-sdk'][0];
-        resultData.minSdkVersion = usesSdk['@android:minSdkVersion'];
-        resultData.targetSdkVersion = usesSdk['@android:targetSdkVersion'];
+        resultData.minSdkVersion = '' + usesSdk['@android:minSdkVersion'];
+        resultData.targetSdkVersion = '' + usesSdk['@android:targetSdkVersion'];
       }
       today = new Date();
       resultData.releaseDate = today.toISOString();
