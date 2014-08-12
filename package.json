@@ -18,6 +18,9 @@
   "homepage": "https://github.com/atraut93/depot",
   "dependencies": {
     "apk-parser": "^0.1.0",
-    "multiparty": "^3.3.2"
+    "multiparty": "^3.3.2",
+    "express": "~4.2.0",
+    "body-parser": "~1.0.0",
+    "mongoose": "~3.8.11"
   }
 }
