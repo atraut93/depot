@@ -1,3 +1,4 @@
 module.exports = {
-  dbName: "depotDB"
+  dbName: 'depotDB',
+  depotBaseUrl: 'http://localhost:8000/'
 };

@@ -1,6 +1,7 @@
-var Project = require('../models/project');
-var express = require('express');
-var router = express.Router();
+var Project = require('../models/project'),
+    User = require('../models/user'),
+    express = require('express'),
+    router = express.Router();
 
 router.route('/projects')
   .get(function (req, res) {
@@ -25,24 +26,23 @@ router.route('/projects')
   });
 
 router.route('/projects/:id')
-  .get(function(req, res) {
-    Project.findOne({ _id: req.params.id}, function(err, project) {
+  .get(function (req, res) {
+    Project.findOne({ _id: req.params.id }, function (err, project) {
       if (err) {
         return res.send(err);
       }
-   
+
       res.json(project);
     });
   })
-  .delete(function(req, res) {
-    Project.remove({
-      _id: req.params.id
-    }, function(err, project) {
+  .delete(function (req, res) {
+    //TODO: cascade deletion of all associated versions
+    Project.remove({ _id: req.params.id }, function (err) {
       if (err) {
         return res.send(err);
       }
    
-      res.json({ message: 'Successfully deleted' });
+      res.send({ message: 'Successfully deleted' });
     });
   });
 

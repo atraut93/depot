@@ -8,7 +8,7 @@ var versionSchema = new Schema({
   versionName: String,
   minSdkVersion: String,
   targetSdkVersion: String,
-  releaseDate: Date,
+  releaseDate: String,
   releaseNotes: String,
   downloadLink: String,
 });
